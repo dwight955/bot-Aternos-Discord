@@ -4,7 +4,7 @@ from discord.ext import commands
 from python_aternos import Client, atserver, atwss, Lists
 
 # Configuración del bot
-prefix = '$'  # Cambiar command_prefix si lo deseas
+prefix = '!'  # Cambiar command_prefix si lo deseas
 intents = discord.Intents(messages=True, guilds=True, message_content=True)
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
@@ -65,9 +65,9 @@ def selec_server(srv_no, ctx):
 	return False, embed
 
 
-@bot.command(name="servidores", pass_context=True, help="Lists available servers",
+@bot.command(name="servers", pass_context=True, help="Lists available servers",
              description="Lista de servidores disponibles")
-@commands.has_role("Jugador")  # ROL
+@commands.has_role("DIOSES")  # ROL
 async def list_servers(ctx):
 	"""Manda la lista de servidores registrados"""
 	try:
@@ -88,9 +88,9 @@ async def list_servers(ctx):
 		await ctx.send("No existe")
 
 
-@bot.command(name="jugadores", pass_context=True, help="List all players on the server",
+@bot.command(name="players", pass_context=True, help="List all players on the server",
              description="Lista de jugadores del servidor")
-@commands.has_role("Jugador")  # ROL
+@commands.has_role("DIOSES")
 async def list_players(ctx, srv_no):
 	"""Manda la lista de jugadores en el servidor"""
 	try:
@@ -109,11 +109,11 @@ async def list_players(ctx, srv_no):
 		else:
 			await ctx.reply(embed=embed_error)
 	except IndexError:
-		await ctx.send("No existe")
+		await ctx.send("No hay jugadores en este momento")
 
-
-@bot.command(name="estatus", pass_context=True, help="States the current state of the mentioned server")
-@commands.has_role("Jugador")  # ROL
+# ESTATUS
+@bot.command(name="status", pass_context=True, help="States the current state of the mentioned server")
+@commands.has_any_role("DIOSES","Vanillero")  # ROL
 async def status(ctx, srv_no):
 	"""Manda el estatus del servidor"""
 	try:
@@ -122,7 +122,7 @@ async def status(ctx, srv_no):
 		if srv:
 			print("Request: @status " + srv.subdomain)
 			if srv.status == "online":
-				color = discord.Colour.red()
+				color = discord.Colour.green()
 				estatus = "Encendido"
 			elif srv.status == "loading starting":
 				color = discord.Colour.yellow()
@@ -148,8 +148,8 @@ async def status(ctx, srv_no):
 		await ctx.reply(embed=embed)
 
 
-@bot.command(name="inicio", pass_context=True, help="Startes the mentioned server")
-@commands.has_role("Jugador")  # ROl
+@bot.command(name="start", pass_context=True, help="Startes the mentioned server")
+@commands.has_any_role("DIOSES","Vanillero")  # ROl
 async def start(ctx, srv_no):
 	"""Inicia el servidor"""
 	await socket.connect()
@@ -179,8 +179,8 @@ async def start(ctx, srv_no):
 		await ctx.send("No existe")
 
 
-@bot.command(name="reinicio", pass_context=True, help="restartes the mentioned server")
-@commands.has_role("Administrador")  # ROL
+@bot.command(name="restart", pass_context=True, help="restartes the mentioned server")
+@commands.has_role("DIOSES")  # ROL
 async def restart(ctx, srv_no):
 	"""Reinicia el servidor"""
 	try:
@@ -210,8 +210,8 @@ async def restart(ctx, srv_no):
 		await ctx.send("No existe")
 
 
-@bot.command(name="apagar", pass_context=True, help="Stopes the mentioned server REQUIRED ROLE: MCS manager")
-@commands.has_role("Administrador")  # Puedes cambiar el rol que puede parar el servidor
+@bot.command(name="off", pass_context=True, help="Stopes the mentioned server REQUIRED ROLE: MCS manager")
+@commands.has_role("DIOSES")  # Puedes cambiar el rol que puede parar el servidor
 async def stop(ctx, srv_no):
 	"""Apaga el servidor"""
 	try:
@@ -241,7 +241,7 @@ async def stop(ctx, srv_no):
 
 
 @bot.command(name="info", pass_context=True, help="States the information about the mentioned server")
-@commands.has_role("Jugador")  # ROL
+@commands.has_any_role("DIOSES","Vanillero")  # ROL
 async def getinfo(ctx, srv_no):
 	"""Retorna la principal información del servidor"""
 	try:
@@ -327,8 +327,8 @@ async def console(msg):
 
 
 # Mensaje cuando el bot está en linea
-@bot.event
-async def on_ready():
+#@bot.event
+"""async def on_ready():
 	embed = discord.Embed(
 		colour=discord.Colour.purple(),
 		title="El Bot está en linea!",
@@ -343,7 +343,7 @@ async def on_ready():
 	                                                               "esperar a que arranque. cuando se inicie por "
 	                                                               "completo te avisará) ", inline=False)
 	embed.add_field(name=prefix + "jugadores [n° de servidor]", value="Muestra a los jugadores registrados del servidor", inline=False)
-	await bot.get_channel(channel_id).send(embed=embed)
+	await bot.get_channel(channel_id).send(embed=embed)"""
 
 
 # corre el bot con la llave de discord
